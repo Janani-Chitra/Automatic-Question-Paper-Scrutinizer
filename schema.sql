@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `co_to_bt_mapping`
+--
+
+DROP TABLE IF EXISTS `co_to_bt_mapping`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `co_to_bt_mapping` (
+  `co_id` int(11) NOT NULL AUTO_INCREMENT,
+  `course_id` varchar(20) DEFAULT NULL,
+  `co` varchar(60) DEFAULT NULL,
+  `bt` varchar(60) DEFAULT NULL,
+  PRIMARY KEY (`co_id`),
+  UNIQUE KEY `course_id` (`course_id`,`co`),
+  CONSTRAINT `co_to_bt_mapping_ibfk_1` FOREIGN KEY (`course_id`) REFERENCES `course` (`course_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `co_to_bt_mapping`
+--
+
+LOCK TABLES `co_to_bt_mapping` WRITE;
+/*!40000 ALTER TABLE `co_to_bt_mapping` DISABLE KEYS */;
+INSERT INTO `co_to_bt_mapping` VALUES (1,'3123','what','knowledge'),(2,'3123','what analyse','knowledge,analysis'),(3,'3123','ask','comprehension');
+/*!40000 ALTER TABLE `co_to_bt_mapping` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `course`
 --
 
@@ -102,4 +130,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-09 10:43:07
+-- Dump completed on 2019-01-09 23:33:47
