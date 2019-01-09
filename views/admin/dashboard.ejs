@@ -1,0 +1,138 @@
+<html>
+
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+</head>
+
+<body ng-app="fyp-admin" ng-controller="myCtrl">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="view" role="button" data-toggle="dropdown">
+                        View
+                    </a>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item btn" ng-click="fetchTable(0)">Staff</button>
+                        <button class="dropdown-item btn" ng-click="fetchTable(1)">Course</button>
+                        <button class="dropdown-item btn" ng-click="fetchTable(2)">Course to Staff Mapping</button>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="add" role="button" data-toggle="dropdown">
+                        Add
+                    </a>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(0)">
+                            Staff
+                        </button>
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(1)">
+                            Course
+                        </button>
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(2)">
+                            Course to Staff Mapping
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div>
+        <h3>{{forms[showingTable].title}}</h3>
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col" ng-repeat="(key,value) in rows[0] track by $index" ng-bind="transform(key)"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in rows track by $index">
+                    <th scope="row" ng-repeat="(key,value) in row track by $index">{{value}}</th>
+                    <th><button class="btn btn-outline-secondary" ng-click="editForm($index)">Edit</button></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="form" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{type}} / {{form.title}}</h5>
+                    <button type="button" class="close form-close" data-dismiss="modal">&times;</button>
+                </div>
+                <form ng-submit="submitForm()">
+                    <div class="modal-body" ng-include="form.url"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary form-close" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var row = {}, selectedRow = 0;
+    var app = angular.module('fyp-admin', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        var tables = ['staff', 'course', 'course_to_staff_mapping'];
+        ($scope.fetchTable = function (ind, attr = 'rows') {
+            $scope.showingTable = ind;
+            $scope[attr] = [];
+            $http({
+                method: 'POST',
+                url: '/admin/table/' + tables[ind],
+                data: $scope.data,
+            }).then(function (res) {
+                $scope[attr] = res.data.rows;
+            }, function (res) { });
+        })(0);
+        $scope.forms = [{ title: 'Staff', url: '/admin/form/staff' },
+        { title: 'Course', url: '/admin/form/course' },
+        { title: 'Course to Staff Mapping', url: '/admin/form/course_to_staff_mapping' }];
+        $scope.fetchForm = function (ind) {
+            $scope.type = "Add";
+            $scope.data = {};
+            if (ind == 2) {
+                $scope.fetchTable(0, 'staff'), $scope.fetchTable(1, 'course');
+            }
+            $scope.form = $scope.forms[ind];
+        }
+        $scope.submitForm = function () {
+            $http({
+                method: 'POST',
+                url: $scope.form.url,
+                data: $scope.data,
+            }).then(function (res) {
+                alert('success');
+                $scope.fetchTable($scope.showingTable);
+            }, function (res) {
+                alert('failed')
+            });
+        }
+        $scope.editForm = function (ind) {
+            $($('.dropdown-item')[$scope.showingTable + 3]).click();
+            $scope.type = 'Edit';
+            for (key in $scope.rows[ind]) {
+                $scope.data[key] = $scope.rows[ind][key];
+            }
+        }
+        $scope.transform = function (text) {
+            return text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ');
+        }
+    });
+    $(document).ready(function () {
+        // $($('.dropdown-item')[5]).click()
+    });
+</script>
+
+</html>

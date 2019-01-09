@@ -1,0 +1,137 @@
+<html>
+
+<head>
+    <title>Automatic Question Paper Scrutinizer</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/categories.js"></script>
+    <script src="/js/stemmer.js"></script>
+    <script src="/js/classifier.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        @media print {
+          #pdf-button {
+            display: none;
+          }
+        }
+        textarea,input{
+            border: none;
+    border-color: transparent;
+        }
+      </style>
+
+</head>
+
+<body>
+    <CENTER>
+        <table border="1">
+            <tr>
+                <td>Register No:</td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+                <td width="40px"></td>
+            </tr>
+        </table>
+        <br>
+        <h5>FACULTY OF INFORMATION & COMMUNICATION ENGINEERING, ANNA UNIVERSITY CEG CAMPUS</h5><br>
+        <H5> DEPARTMENT OF INFORMATION SCIENCE AND TECHNOLOGY</H5>
+        <H6>Assessment Test :&nbsp <input type="text"> <br><br> Academic Year:&nbsp <input type="text"> Regulations:
+            &nbsp <input type="text"> </H6>
+        <br><br>
+        <div class="container">
+            <div class="row">
+                <div class=" col-md-6"> Program :&nbsp <input type="text"></div>
+                <div class="col-md-6"> Year/Sem :&nbsp <input type="text"></div>
+            </div>
+            <div class="row">
+                <div class=" col-md-6"> Max. Marks: &nbsp <input type="text"></div>
+                <div class="col-md-6"> Duration:&nbsp <input type="text"></div>
+            </div>
+            <div class="row">
+                <div class=" col-md-6"> Date of Exam: &nbsp <input type="text"></div>
+                <div class="col-md-6"> Staff Name: &nbsp <input type="text"></div>
+            </div>
+        </div>
+        <h6>Course Code and Title: &nbsp <input type="text"> </h6><br><br>
+
+        <br></br>
+        <div class="container">
+            <% for(var i =0 ; i < data.sections.length ;i ++) { %>
+            <h2>Part
+                <%= String.fromCharCode(i+65) %>
+            </h2>
+            <table border="1" width="90%" style="text-align:center">
+                <tr>
+                    <th>Question No</th>
+                    <th>Question</th>
+                    <th>Blooms Taxonomy</th>
+                    <th>Course Outcome</th>
+                    <th>Marks</th>
+                </tr>
+                <% for (j = 1; j <= data.sections[i]; j++) { %>
+                <% id = ''+i+j %>
+                <tr>
+                    <td>
+                        <%= j %>
+                    </td>
+                    <td><textarea cols="60" id='content-<%= id %>' onkeyup="start('<%= id %>')"></textarea></td>
+                    <td><textarea cols="10" id='class-<%= id %>' disabled></textarea></td>
+                    <td><textarea cols="7" id='cos-<%= id %>' disabled></textarea></td>
+                    <td><input type="text"></td>
+                </tr>
+                <% } %>
+            </table>
+            <% } %>
+        </div>
+        <br><br>
+        <input id="pdf-button" type="button" value="Download PDF" onClick="window.print()" />
+    </CENTER>
+    <script>
+        var reverse_map = {};
+        $.ajax({
+            url: "/table/co_to_bt",
+            type: 'post',
+            data: { course_id: '<%= data.course_id %>' }
+        }).done(function (res) {
+            parse(res.rows);
+        });
+        function parse(rows) {
+            rows.forEach(row => {
+                var bts = row.bt.split(',');
+                bts.forEach(bt => {
+                    if (!reverse_map[bt]) reverse_map[bt] = [];
+                    reverse_map[bt].push('CO-' + row.co_id);
+                });
+            });
+            console.log(reverse_map)
+        }
+        function start(id) {
+            var content_id = `#content-${id}`;
+            var content = $(content_id).val();
+            var val = classify(content);
+            var class_id = `#class-${id}`;
+            $(class_id).val(val);
+            var bts = val.split(','), i = 0, cos = '';
+            for (; i < bts.length - 1; i++) {
+                cos += reverse_map[bts[i]] + ',';
+            }
+            if (bts.length > 0) {
+                cos += reverse_map[bts[i]];
+            }
+            var cos_id = `#cos-${id}`;
+            $(cos_id).val(cos);
+        }
+    </script>
+</body>
+
+</html>

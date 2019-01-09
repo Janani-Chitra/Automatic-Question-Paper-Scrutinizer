@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <title>Automatic Question Paper Scrutinizer</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+</head>
+<style>
+    .dashboardContainer {
+        width: 50%;
+    }
+
+    .sym {
+        font-size: 100px;
+        margin: 20px;
+    }
+
+    .card:hover .sym {
+        color: #41484e;
+    }
+
+    .card {
+        text-align: center;
+    }
+
+    .card-title {
+        font-weight: 600;
+    }
+</style>
+
+<body ng-app="fyp" ng-controller="myCtrl">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div>
+                    <h1 class="display-4">Automatic Question Paper Scrutinizer</h1>
+                    <p class="lead">Questions are classified based on Bloom's Taxonomy</p>
+                </div>
+                <div class="w3-dropdown-hover">
+                    <button class="w3-button w3-black">
+                        <%= user.name %></button>
+                    <div class="w3-dropdown-content w3-bar-block w3-border">
+                        <a href="/logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container dashboardContainer">
+        <div class="row justify-content-around">
+            <div class="card col-lg-5 col-md-5 col-sm-12" style="width: 18rem;">
+                <i class="fas fa-book sym"></i>
+                <div class="card-body">
+                    <h5 class="card-title">Course Registration</h5>
+                    <p class="card-text">Get in to register Coursers and Course Outcomes</p>
+                    <a href="/register" class="btn btn-primary">Register</a>
+                </div>
+
+            </div>
+            <div class="card col-lg-5 col-md-5 col-sm-12    " style="width: 18rem;">
+                <i class="fas fa-file-alt sym"></i>
+                <div class="card-body">
+                    <h5 class="card-title">Question Paper Generation</h5>
+                    <p class="card-text">Start framing questions for assesments </p>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" ng-click="fetchTable()">
+                        Generate
+                    </button>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Question Paper Template</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="/generate" method="GET">
+                            <div class="modal-body">
+                                <div class="input-group mb-3">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text">Course ID</label>
+                                        </div>
+                                        <select class="form-control" ng-model="data.course_id" name="course_id">
+                                            <option ng-repeat="course in courses">{{course.course_id}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text">Section</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button" ng-click="inc('sections')">+</button>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3" ng-repeat="i in data.sections track by $index">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text">Section :{{$index+1}}</label>
+                                    </div>
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text">Number of Questions</label>
+                                    </div>
+                                    <input class="form-control" ng-model="data.sections[$index].name" name="sections[]"> 
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="button" ng-click="del('sections',$index)">-</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Start</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var app = angular.module("fyp", []);
+        app.controller('myCtrl', function ($scope, $http) {
+            $scope.data = {};
+            $scope.inc = function (attr) {
+                console.log("hi");
+                var list = $scope.data[attr];
+                if (!list) list = [];
+                list.push('');
+                $scope.data[attr] = list;
+            }
+            $scope.del = function (attr, ind) {
+                var list = $scope.data[attr];
+                list.splice(ind, 1);
+                $scope.data[attr] = list;
+            }
+            $scope.fetchTable = function () {
+                $http({
+                    method: 'POST',
+                    url: '/table/course',
+                    data: $scope.data,
+                }).then(function (res) {
+                    $scope.courses = res.data.rows;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

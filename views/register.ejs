@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>Automatic Question Paper Scrutinizer</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/categories.js"></script>
+    <script src="/js/stemmer.js"></script>
+    <script src="/js/classifier.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+</head>
+
+<body ng-app="fyp" ng-controller="myCtrl">
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand">Automatic Question Paper Scrutinizer</a>
+    </nav>
+    <div class="container">
+        <form class="form" ng-submit="submitForm()">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Course ID</label>
+                </div>
+                <select class="form-control" ng-model="data.course_id">
+                    <option ng-repeat="course in courses">{{course.course_id}}</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">Course Outcome</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" ng-click="inc('outcomes')">+</button>
+                </div>
+            </div>
+            <div class="input-group mb-3" ng-repeat="i in data.outcomes track by $index">
+                <div class="input-group-prepend">
+                    <label class="input-group-text">CO-{{$index}}</label>
+                </div>
+                <textarea class="form-control" id="content-{{$index}}" ng-model="data.outcomes[$index].co" ng-keyup="classify($index)"></textarea>
+                <div class="input-group-append">
+                    <label class="input-group-text">Blooms Level</label>
+                </div>
+                <textarea class="form-control" id="class-{{$index}}" ng-model="data.outcomes[$index].bt" disabled></textarea>
+                <div class="input-group-append">
+                    <button class="btn btn-secondary" type="button" ng-click="del('outcomes',$index)">-</button>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-outline-secondary">
+        </form>
+    </div>
+</body>
+<script>
+    var app = angular.module("fyp", []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.data = {};
+        $scope.inc = function (attr) {
+            var list = $scope.data[attr];
+            if (!list) list = [];
+            list.push('');
+            $scope.data[attr] = list;
+        }
+        $scope.del = function (attr, ind) {
+            var list = $scope.data[attr];
+            list.splice(ind, 1);
+            $scope.data[attr] = list;
+        }
+        $scope.fetchTable = function () {
+            $http({
+                method: 'POST',
+                url: '/table/course',
+                data: $scope.data,
+            }).then(function (res) {
+                $scope.courses = res.data.rows;
+            });
+        }
+        $scope.fetchTable();
+        $scope.submitForm = function () {
+            console.log($scope.data)
+            $http({
+                data: $scope.data,
+                url: '/add/course_outcomes',
+                method: 'post',
+            }).then(function (res) {
+                alert('success')
+            }, function (res) {
+                alert('error')
+            })
+        }
+        $scope.classify = function (ind) {
+            var val = classify($scope.data.outcomes[ind].co);
+            $scope.data.outcomes[ind].bt = val;
+        }
+    });
+</script>
+
+</html>

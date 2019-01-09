@@ -1,0 +1,16 @@
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Course ID</span>
+    </div>
+    <select class="form-control" ng-model="data.course_id">
+            <option ng-repeat="x in course">{{x.course_id}}</option>
+    </select>
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Staff ID</span>
+    </div>
+    <select class="form-control" ng-model="data.staff_id">
+            <option ng-repeat="x in staff">{{x.staff_id}}</option>
+    </select>
+</div>
