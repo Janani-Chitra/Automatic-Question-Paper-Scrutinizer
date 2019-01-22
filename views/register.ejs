@@ -40,7 +40,9 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text">CO-{{$index}}</label>
                 </div>
+                
                 <textarea class="form-control" id="content-{{$index}}" ng-model="data.outcomes[$index].co" ng-keyup="classify($index)"></textarea>
+                <input   class="form-control" id="course-{{$index}}" ng-model="data.outcomes[$index].CO_level" ng-value="{{$index}}" >
                 <div class="input-group-append">
                     <label class="input-group-text">Blooms Level</label>
                 </div>
@@ -79,7 +81,9 @@
         }
         $scope.fetchTable();
         $scope.submitForm = function () {
+            console.log("here");
             console.log($scope.data)
+            console.log("here");
             $http({
                 data: $scope.data,
                 url: '/add/course_outcomes',

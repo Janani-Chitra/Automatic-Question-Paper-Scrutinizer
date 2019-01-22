@@ -28,15 +28,18 @@ module.exports.fetch = (req, res) => {
 }
 module.exports.insert1 = (req, res) => {
     var outcomes = req.body.outcomes
-    var query = 'insert into co_to_bt_mapping(course_id,co,bt) values'
+    console.log(outcomes);
+    var query = 'insert into co_to_bt_mapping(course_id,CO_level,co,bt) values'
     var data = [], i = 0
+
     for (; i < outcomes.length - 1; i++) {
-        query += '(?,?,?),'
-        data = data.concat([req.body.course_id, outcomes[i].co, outcomes[i].bt])
+        console.log(outcomes[i].cl);
+        query += '(?,?,?,?),'
+        data = data.concat([ req.body.course_id, outcomes[i].cl,outcomes[i].co, outcomes[i].bt])
     }
     if (outcomes.length > 0) {
-        query += '(?,?,?)'
-        data = data.concat([req.body.course_id, outcomes[i].co, outcomes[i].bt])
+        query += '(?,?,?,?)'
+        data = data.concat([ req.body.course_id,outcomes[i].cl, outcomes[i].co, outcomes[i].bt])
     }
     connection.query(query, data, (err, rows) => {
         console.log(err)
