@@ -11,18 +11,36 @@
     <script src="/js/classifier.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+<style>
+   .regDiv{
+       margin-top:20px;
+   }
+   .label{
+       background: #9257A5;
+       color:white;
+   }
+   .btn{
+       background: #D481EE;
+       color:white;
+   }
+   .btn:hover{
+       border:1px solid #9257A5;
+   }
+   .back{
+       float:right;
+   }
+</style>
 </head>
 
 <body ng-app="fyp" ng-controller="myCtrl">
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar text-light " style="background: #9257A5">
         <a class="navbar-brand">Automatic Question Paper Scrutinizer</a>
     </nav>
-    <div class="container">
+    <div class="container regDiv" >
         <form class="form" ng-submit="submitForm()">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text">Course ID</label>
+                    <label class="input-group-text label">Course ID</label>
                 </div>
                 <select class="form-control" ng-model="data.course_id">
                     <option ng-repeat="course in courses">{{course.course_id}}</option>
@@ -30,29 +48,29 @@
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text">Course Outcome</label>
+                    <label class="input-group-text label">Course Outcome</label>
                 </div>
                 <div class="input-group-append">
-                    <button class="btn btn-secondary" type="button" ng-click="inc('outcomes')">+</button>
+                    <button class="btn " type="button" ng-click="inc('outcomes')">+</button>
                 </div>
             </div>
             <div class="input-group mb-3" ng-repeat="i in data.outcomes track by $index">
                 <div class="input-group-prepend">
-                    <label class="input-group-text">CO-{{$index}}</label>
+                    <label class="input-group-text label">CO-{{$index}}</label>
                 </div>
-                
                 <textarea class="form-control" id="content-{{$index}}" ng-model="data.outcomes[$index].co" ng-keyup="classify($index)"></textarea>
-                <input   class="form-control" id="course-{{$index}}" ng-model="data.outcomes[$index].CO_level" ng-value="{{$index}}" >
+                <input type="hidden"   class="form-control" id="course-{{$index}}" ng-model="data.outcomes[$index].cl" ng-init="data.outcomes[$index].cl=$index">
                 <div class="input-group-append">
-                    <label class="input-group-text">Blooms Level</label>
+                    <label class="input-group-text label">Blooms Level</label>
                 </div>
                 <textarea class="form-control" id="class-{{$index}}" ng-model="data.outcomes[$index].bt" disabled></textarea>
                 <div class="input-group-append">
-                    <button class="btn btn-secondary" type="button" ng-click="del('outcomes',$index)">-</button>
+                    <button class="btn " type="button" ng-click="del('outcomes',$index)">-</button>
                 </div>
             </div>
-            <input type="submit" class="btn btn-outline-secondary">
+            <input type="submit" class="btn ">
         </form>
+        <button class="btn back" ><a href="/dashboard" style="text-decoration: none">Back</a></button>
     </div>
 </body>
 <script>
@@ -64,6 +82,15 @@
             if (!list) list = [];
             list.push('');
             $scope.data[attr] = list;
+        }
+        $scope.back = function(){
+            console.log("hi");
+            $http({
+                method:'get',
+                url:'/dashboard'
+            }).then(function (res) {
+                console.log("hi");
+            });
         }
         $scope.del = function (attr, ind) {
             var list = $scope.data[attr];
@@ -81,9 +108,6 @@
         }
         $scope.fetchTable();
         $scope.submitForm = function () {
-            console.log("here");
-            console.log($scope.data)
-            console.log("here");
             $http({
                 data: $scope.data,
                 url: '/add/course_outcomes',

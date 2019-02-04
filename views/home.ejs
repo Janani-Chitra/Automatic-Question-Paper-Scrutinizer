@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,900" rel="stylesheet">
 </head>
 <style>
     input[type=text],input[type=password] {
@@ -34,16 +35,21 @@ input[type=submit]:hover {
 .formdiv {
   width:50%;
   border-radius: 5px;
-  background-color: #f2f2f2;
+  background:#D481EE ;
   padding: 20px;
+}
+#head{
+    background: #9257A5;
+    color:white;
+    font-family: 'Playfair Display', serif;
 }
 </style>
 
 <body>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid " id = "head">
         <div class="container">
             <h1 class="display-4">Automatic Question Paper Scrutinizer</h1>
-            <p class="lead">Questions are classified based on Bloom's Taxonomy</p>
+            <p class="lead">Helps you to generate questions that satisfies most course outcomes</p>
         </div>
     </div>
     <div class="container formdiv">
@@ -52,7 +58,7 @@ input[type=submit]:hover {
             <input type="text" id="Uname" name="email" placeholder="Username.." value="a@b.com">
             <label for="pass">Password</label>
             <input type="password" id="pass" name="password" placeholder="password.." value="1234">
-            <input type="submit">
+            <input type="submit" style="background: #9257A5">
 
         </form>
     </div>

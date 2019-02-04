@@ -31,15 +31,16 @@ module.exports.insert1 = (req, res) => {
     console.log(outcomes);
     var query = 'insert into co_to_bt_mapping(course_id,CO_level,co,bt) values'
     var data = [], i = 0
-
+    console.log(outcomes[i].cl);
     for (; i < outcomes.length - 1; i++) {
-        console.log(outcomes[i].cl);
+        var cl = "CO-"+outcomes[i].cl;
         query += '(?,?,?,?),'
-        data = data.concat([ req.body.course_id, outcomes[i].cl,outcomes[i].co, outcomes[i].bt])
+        data = data.concat([ req.body.course_id, cl,outcomes[i].co, outcomes[i].bt])
     }
     if (outcomes.length > 0) {
+        var cl = "CO-"+outcomes[i].cl;
         query += '(?,?,?,?)'
-        data = data.concat([ req.body.course_id,outcomes[i].cl, outcomes[i].co, outcomes[i].bt])
+        data = data.concat([ req.body.course_id,cl, outcomes[i].co, outcomes[i].bt])
     }
     connection.query(query, data, (err, rows) => {
         console.log(err)
