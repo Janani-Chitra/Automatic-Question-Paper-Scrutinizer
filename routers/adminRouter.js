@@ -23,5 +23,6 @@ app.get('/form/:form', middleware.isLoggedIn, (req, res) => {
 app.post('/form/staff', middleware.isLoggedIn, controller.insert1)
 app.post('/form/course', middleware.isLoggedIn, controller.insert2)
 app.post('/form/course_to_staff_mapping', middleware.isLoggedIn, controller.insert3)
+app.post('/form/curriculum', middleware.isLoggedIn, controller.insert4)
 
 module.exports = app

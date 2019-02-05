@@ -10,3 +10,41 @@
     </div>
     <input type="text" class="form-control" placeholder="Example : TQM" ng-model="data.name">
 </div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Credits</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 3" ng-model="data.credit">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Minimum Pass Mark</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 50" ng-model="data.MinPassMark">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Course Owner</span>
+    </div>
+    <select class="form-control" ng-model="data.co_owner">
+            <option ng-repeat="x in staff">{{x.staff_id}}</option>
+    </select>
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Internal</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 50" ng-model="data.internal">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">External</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 50" ng-model="data.external">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Total Number Of Periods</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 45" ng-model="data.periods">
+</div>

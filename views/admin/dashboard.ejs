@@ -22,6 +22,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <button class="dropdown-item btn" ng-click="fetchTable(0)">Staff</button>
+                        <button class="dropdown-item btn" ng-click="fetchTable(3)">Curriculum</button>
                         <button class="dropdown-item btn" ng-click="fetchTable(1)">Course</button>
                         <button class="dropdown-item btn" ng-click="fetchTable(2)">Course to Staff Mapping</button>
                     </div>
@@ -33,6 +34,9 @@
                     <div class="dropdown-menu">
                         <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(0)">
                             Staff
+                        </button>
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(3)">
+                            Curriculum
                         </button>
                         <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(1)">
                             Course
@@ -69,7 +73,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">{{type}} / {{form.title}}</h5>
                     <button type="button" class="close form-close" data-dismiss="modal">&times;</button>
                 </div>
-                <form ng-submit="submitForm()">
+                <form ng-submit="submitForm()" enctype="multipart/form-data">
                     <div class="modal-body" ng-include="form.url"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary form-close" data-dismiss="modal">Close</button>
@@ -84,7 +88,7 @@
     var row = {}, selectedRow = 0;
     var app = angular.module('fyp-admin', []);
     app.controller('myCtrl', function ($scope, $http) {
-        var tables = ['staff', 'course', 'course_to_staff_mapping'];
+        var tables = ['staff', 'course', 'course_to_staff_mapping','curriculum'];
         ($scope.fetchTable = function (ind, attr = 'rows') {
             $scope.showingTable = ind;
             $scope[attr] = [];
@@ -98,10 +102,14 @@
         })(0);
         $scope.forms = [{ title: 'Staff', url: '/admin/form/staff' },
         { title: 'Course', url: '/admin/form/course' },
-        { title: 'Course to Staff Mapping', url: '/admin/form/course_to_staff_mapping' }];
+        { title: 'Course to Staff Mapping', url: '/admin/form/course_to_staff_mapping' },
+        { title: 'Curriculum', url: '/admin/form/curriculum' }];
         $scope.fetchForm = function (ind) {
             $scope.type = "Add";
             $scope.data = {};
+            if(ind == 1){
+                $scope.fetchTable(0, 'staff')
+            }
             if (ind == 2) {
                 $scope.fetchTable(0, 'staff'), $scope.fetchTable(1, 'course');
             }

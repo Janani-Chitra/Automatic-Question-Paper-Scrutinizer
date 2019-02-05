@@ -10,6 +10,9 @@ app.get('/', (req, res) => {
 app.get('/register', middleware.isLoggedIn, (req, res) => {
     res.render("register");
 })
+app.get('/manageTopics', middleware.isLoggedIn, (req, res) => {
+    res.render("manageTopics");
+})
 app.post('/login', controller.login)
 app.get('/logout', controller.logout)
 app.get('/dashboard', middleware.isLoggedIn, (req, res) => {

@@ -6,7 +6,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-
+var fileUpload = require("express-fileupload");
+app.use(fileUpload());
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
