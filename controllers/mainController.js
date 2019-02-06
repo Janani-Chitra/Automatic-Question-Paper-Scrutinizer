@@ -27,7 +27,7 @@ module.exports.fetch = (req, res) => {
     })
 }
 module.exports.fetchcon = (req, res) => {
-    connection.query(`select * from course where cur_id =  ?` ,[req.params.cur], (err, rows) => {
+    connection.query(`select * from course where cur_id =  ?`, [req.params.cur], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -74,4 +74,49 @@ module.exports.fetch2 = (req, res) => {
         }
         res.send({ rows: rows })
     })
+}
+module.exports.insert2 = (req, res) => {
+    console.log(req.body)
+    var data = { course_id: req.body.course_id, questions: JSON.stringify(req.body.questions) };
+    if (req.body.paper_id) {
+        data['paper_id'] = req.body.paper_id;
+    }
+    connection.query('insert into course_to_question_mapping set ? ON DUPLICATE KEY UPDATE ?', [data, data], (err, result) => {
+        if (err) {
+            console.log(err);
+            res.sendStatus(400);
+            return;
+        }
+        console.log({ paper_id: result.insertId })
+        res.json({ paper_id: result.insertId });
+    });
+}
+module.exports.fetch3 = (req, res) => {
+    var query = 'select * from course as a,course_to_question_mapping as b,course_to_staff_mapping as c where a.course_id=b.course_id and c.staff_id=?';
+    connection.query(query, [req.session.user.staff_id], (err, results) => {
+        res.render('excel', { rows: results })
+    })
+}
+module.exports.download = (req, res) => {
+    var curriculum = req.body.curriculum, paper_id = req.body.paper_id;
+    if (!curriculum || !paper_id) {
+        res.sendStatus(400);
+        return;
+    }
+    connection.query('select student_list from curriculum where curriculum=? limit 1', [curriculum], (err, results1) => {
+        if (err) console.log(err)
+        connection.query('select questions from course_to_question_mapping where paper_id=?', [paper_id], (err, results2) => {
+            if (err) console.log(err)
+            var questions = results2[0].questions;
+            require('request').post({
+                url: 'http://localhost:5000/gene',
+                formData: {
+                    filename: results1[0].student_list,
+                    questions: questions,
+                }
+            }, (err, resp, body) => {
+                res.download('./temp/' + body);
+            });
+        });
+    });
 }

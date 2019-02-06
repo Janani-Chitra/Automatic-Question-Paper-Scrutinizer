@@ -30,5 +30,9 @@ app.post('/add/course_outcomes', middleware.isLoggedIn, controller.insert1)
 app.post('/table/co_to_bt', middleware.isLoggedIn, controller.fetch1)
 app.post('/table/curriculum', middleware.isLoggedIn, controller.fetch2)
 
+app.post('/store-questions', middleware.isLoggedIn, controller.insert2)
+app.get('/excel', controller.fetch3)
+app.post('/download', controller.download)
+
 module.exports = app
 

@@ -92,8 +92,8 @@
             </div>
         </div>
     </div>
-    <div class="container dashboardContainer" >
-        <div class="row justify-content-between">
+    <div class="container-fluid dashboardContainer">
+        <div class="row">
             <div class="card col-lg-3 col-md-3 col-sm-12" style="width: 18rem;">
                 <i class="fas fa-book sym"></i>
                 <div class="card-body" style="padding:0">
@@ -106,7 +106,7 @@
             <div class="card col-lg-3 col-md-3 col-sm-12    " style="width: 18rem;">
                 <i class="fas fa-file-alt sym"></i>
                 <div class="card-body" style="padding:0;">
-                    <h5 class="card-title" >Question Paper Generation</h5>
+                    <h5 class="card-title">Question Paper Generation</h5>
                     <!-- <p class="card-text">Start framing questions for assesments </p> -->
                     <button type="button" class="btn " style="background: #D481EE" data-toggle="modal" data-target="#exampleModal"
                         ng-click="fetchTable()">
@@ -121,6 +121,15 @@
                     <h5 class="card-title">Manage Topics</h5>
                     <!-- <p class="card-text">Manage the course topics and schedule them</p> -->
                     <a href="/manageTopics" class="btn " style="background: #D481EE">Schedule</a>
+                </div>
+            </div>
+            <div class="card col-lg-3 col-md-3 col-sm-12    " style="width: 18rem;">
+                <i class="far fa-calendar-alt sym"></i>
+                <!-- <i class="fas fa-clock sym"></i> -->
+                <div class="card-body" style="padding:0">
+                    <h5 class="card-title">Manage Topics</h5>
+                    <!-- <p class="card-text">Manage the course topics and schedule them</p> -->
+                    <a href="/excel" class="btn " style="background: #D481EE">Get Excel Format</a>
                 </div>
             </div>
             <div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -200,7 +209,7 @@
                     $scope.courses = res.data.rows;
                 });
             }
-           
+
         });
     </script>
 </body>

@@ -11,8 +11,8 @@
     <script src="/js/classifier.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<style>
-   .regDiv{
+    <style>
+        .regDiv{
        margin-top:20px;
    }
    .label{
@@ -36,7 +36,7 @@
     <nav class="navbar text-light " style="background: #9257A5">
         <a class="navbar-brand">Automatic Question Paper Scrutinizer</a>
     </nav>
-    <div class="container regDiv" >
+    <div class="container regDiv">
         <form class="form" ng-submit="submitForm()">
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -59,7 +59,8 @@
                     <label class="input-group-text label">CO-{{$index}}</label>
                 </div>
                 <textarea class="form-control" id="content-{{$index}}" ng-model="data.outcomes[$index].co" ng-keyup="classify($index)"></textarea>
-                <input type="hidden"   class="form-control" id="course-{{$index}}" ng-model="data.outcomes[$index].cl" ng-init="data.outcomes[$index].cl=$index">
+                <input type="hidden" class="form-control" id="course-{{$index}}" ng-model="data.outcomes[$index].cl"
+                    ng-init="data.outcomes[$index].cl=$index">
                 <div class="input-group-append">
                     <label class="input-group-text label">Blooms Level</label>
                 </div>
@@ -70,7 +71,7 @@
             </div>
             <input type="submit" class="btn ">
         </form>
-        <button class="btn back" ><a href="/dashboard" style="text-decoration: none">Back</a></button>
+        <button class="btn back"><a href="/dashboard" style="text-decoration: none">Back</a></button>
     </div>
 </body>
 <script>
@@ -110,8 +111,11 @@
             })
         }
         $scope.classify = function (ind) {
-            var val = classify($scope.data.outcomes[ind].co);
-            $scope.data.outcomes[ind].bt = val;
+            var val = $scope.data.outcomes[ind].co;
+            console.log(val)
+            $http.get('/classify?q=' + val).then(function (res) {
+                $scope.data.outcomes[ind].bt = res.data || '';
+            })
         }
     });
 </script>

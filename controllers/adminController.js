@@ -62,3 +62,21 @@ module.exports.insert3 = (req, res) => {
         res.sendStatus(code)
     })
 }
+
+module.exports.insert4 = (req, res) => {
+    var file = req.files.student;
+    var student_list = file.name;
+    file.mv('./public/Student_List/' + file.name, function (err) {
+        if (err) throw err;
+        var query = `insert into curriculum(curriculum,student_list) values(?,?) `
+        var data = [req.body.curriculum, student_list]
+        connection.query(query, data.concat(data), (err, rows) => {
+            var code = 200
+            if (err) {
+                console.log(err)
+                code = 400
+            }
+            res.sendStatus(code)
+        })
+    })
+}

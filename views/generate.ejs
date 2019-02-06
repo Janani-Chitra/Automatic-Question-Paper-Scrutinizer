@@ -84,7 +84,7 @@
                     <td>
                         <%= j %>
                     </td>
-                    <td><textarea cols="60" id='content-<%= id %>' onkeyup="start('<%= id %>')"></textarea></td>
+                    <td><textarea cols="60" class="content" id='content-<%= id %>' onkeyup="start('<%= id %>')"></textarea></td>
                     <td><textarea cols="10" id='class-<%= id %>' disabled></textarea></td>
                     <td><textarea cols="7" id='cos-<%= id %>' disabled></textarea></td>
                     <td><input type="text"></td>
@@ -94,6 +94,7 @@
             <% } %>
         </div>
         <br><br>
+        <button onclick="save()">Save</button>
         <input id="pdf-button" type="button" value="Download PDF" onClick="window.print()" />
     </CENTER>
     <script>
@@ -115,10 +116,7 @@
             });
             console.log(reverse_map)
         }
-        function start(id) {
-            var content_id = `#content-${id}`;
-            var content = $(content_id).val();
-            var val = classify(content);
+        function go(id, val) {
             var class_id = `#class-${id}`;
             $(class_id).val(val);
             var bts = val.split(','), i = 0, cos = '';
@@ -129,7 +127,33 @@
                 cos += reverse_map[bts[i]];
             }
             var cos_id = `#cos-${id}`;
+            if (cos == 'undefined') { cos = '' };
             $(cos_id).val(cos);
+        }
+        function start(id) {
+            var content_id = `#content-${id}`;
+            var content = $(content_id).val();
+            $.ajax({
+                url: '/classify',
+                data: { q: content },
+                type: 'get',
+            }).done(function (res) {
+                go(id, res);
+            })
+        }
+        var data = { course_id: '<%- data.course_id %>' };
+        function save() {
+            data['questions'] = [];
+            for (var i = 0; i < $('.content').length; i++) {
+                data['questions'].push($($('.content')[i]).val());
+            }
+            $.ajax({
+                url: '/store-questions',
+                type: 'post',
+                data: data,
+            }).done(function (res) {
+                data['paper_id'] = res.paper_id;
+            })
         }
     </script>
 </body>

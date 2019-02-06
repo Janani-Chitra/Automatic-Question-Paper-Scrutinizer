@@ -38,8 +38,8 @@
                         <!-- <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(3)">
                             Curriculum
                         </button> -->
-                        <button class="dropdown-item btn" data-toggle="modal" >
-                           <a href="/curriculum"> Curriculum</a>
+                        <button class="dropdown-item btn" data-toggle="modal">
+                            <a href="/admin/curriculum"> Curriculum</a>
                         </button>
                         <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(1)">
                             Course
@@ -141,16 +141,16 @@
             return text.charAt(0).toUpperCase() + text.slice(1).replace('_', ' ');
         }
         $scope.fetchCur = function () {
-        $http({
-            method: 'POST',
-            url: '/admin/table/curriculum',
-            data: $scope.data,
-        }).then(function (res) {
-            $scope.cur = res.data.rows;
-        });
-    }
-    $scope.fetchCur();
-    
+            $http({
+                method: 'POST',
+                url: '/admin/table/curriculum',
+                data: $scope.data,
+            }).then(function (res) {
+                $scope.cur = res.data.rows;
+            });
+        }
+        $scope.fetchCur();
+
     });
     $(document).ready(function () {
         // $($('.dropdown-item')[5]).click()
