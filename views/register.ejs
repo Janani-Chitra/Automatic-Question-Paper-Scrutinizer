@@ -83,15 +83,6 @@
             list.push('');
             $scope.data[attr] = list;
         }
-        $scope.back = function(){
-            console.log("hi");
-            $http({
-                method:'get',
-                url:'/dashboard'
-            }).then(function (res) {
-                console.log("hi");
-            });
-        }
         $scope.del = function (attr, ind) {
             var list = $scope.data[attr];
             list.splice(ind, 1);

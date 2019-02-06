@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express.Router();
-
+var connection = require("../db").connection
 var controller = require("../controllers/mainController")
 var middleware = require("../middlewares/mainMiddleware")
 
@@ -24,9 +24,11 @@ app.get('/generate', middleware.isLoggedIn, (req, res) => {
 })
 
 app.post('/table/course', middleware.isLoggedIn, controller.fetch)
-
+app.post('/table1/:cur', middleware.isLoggedIn, controller.fetchcon)
 app.post('/add/course_outcomes', middleware.isLoggedIn, controller.insert1)
 
-app.post('/table/co_to_bt',middleware.isLoggedIn,controller.fetch1)
+app.post('/table/co_to_bt', middleware.isLoggedIn, controller.fetch1)
+app.post('/table/curriculum', middleware.isLoggedIn, controller.fetch2)
 
 module.exports = app
+

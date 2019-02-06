@@ -27,7 +27,7 @@
         <span class="input-group-text">Course Owner</span>
     </div>
     <select class="form-control" ng-model="data.co_owner">
-            <option ng-repeat="x in staff">{{x.staff_id}}</option>
+        <option ng-repeat="x in staff">{{x.staff_id}}</option>
     </select>
 </div>
 <div class="input-group mb-3">
@@ -47,4 +47,18 @@
         <span class="input-group-text">Total Number Of Periods</span>
     </div>
     <input type="number" class="form-control" placeholder="Example : 45" ng-model="data.periods">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Semester</span>
+    </div>
+    <input type="number" class="form-control" placeholder="Example : 5" ng-model="data.sem">
+</div>
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Curriculum</span>
+    </div>
+    <select class="form-control" ng-model="data.cur">
+        <option ng-repeat="x in cur">{{x.curriculum}}</option>
+    </select>
 </div>

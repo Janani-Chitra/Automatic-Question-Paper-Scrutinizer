@@ -11,20 +11,122 @@
     <script src="/js/classifier.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<style>
-    .mngDiv{
-        height:20%;
-        margin:20px;
-        box-shadow: 2px 2px 5px #9257A5;
+    <style>
+        body{
+        background: rgb(243, 230, 248);
+        font-family: 'Playfair Display', serif !important;
     }
+    .mngDiv{
+        height:max-content;
+        background:white;
+        margin:20px;
+        padding-top:6px;
+        border-radius:10px;
+        box-shadow: 3px 3px 5px #9257A5;
+    }
+    .mnghead{
+        background:#D481EE;
+        color:white;
+        font-size:20px;
+        border-top-left-radius: 30px;
+        border-bottom-right-radius: 30px;
+        padding-left: 30px;
+    }
+    .mngformDiv{
+        margin-top:20px;
+    }
+    .btn{
+       background: #D481EE;
+       color:white;
+   }
+   .btn:hover{
+       border:1px solid #9257A5;
+   }
 </style>
 
 </head>
 
-<body>
-<div class=" mngDiv">
+<body ng-app="fyp" ng-controller="myCtrl">
+    <div class=" mngDiv">
+        <div class="container mnghead">Topics List</div>
+        <div class="container mngformDiv">
+            <form class="form-inline justify-content-between" style="width:100%;">
+                <div class="form-group">
+                    <label for="Curriculum">Curriculum</label>&nbsp;&nbsp;
+                    <select class="form-control" ng-model="select" ng-change="fetchTable1(select)">
+                        <option ng-repeat="curriculum in curriculum">{{curriculum.curriculum}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="term">Term</label> &nbsp;&nbsp;
+                    <select class="form-control" ng-model="selectsem" ng-change="fetchsem(selectsem)">
+                        <option ng-repeat="course in course">{{course.semester}}th Semester </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="Course">Course</label>&nbsp;&nbsp;
+                    <select class="form-control">
+                        <option ng-repeat="course in course" ng-if='course.semester == 3'>{{course.name }} </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">+ Add Topics</button>
+            </form>
+        </div>
+        <div class="container">
+            
+        </div>
+        <div class="container ">
+            <table class="table table-striped ">
+                <thead >
+                    <tr>
+                        <th scope="col">Topic Title</th>
+                        <th scope="col">Topic Title</th>
+                        <th scope="col">Topic Content</th>
+                        <th scope="col">Topic Hour</th>
+                        <th scope="col">Topic Delivery Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr> <th scope="row" colspan="5">Unit 1</th> </tr>
+                        <tr><th scope="row" colspan="5">Unit 2</th></tr>
+                        <tr><th scope="row" colspan="5">Unit 3</th></tr>
+                        <tr><th scope="row" colspan="5">Unit 4</th></tr>
+                        <tr><th scope="row" colspan="5">Unit 5</th></tr>
+                </tbody>
+            </table>
 
-</div>
+        </div>
+
+    </div>
 </body>
+<script>
+    var app = angular.module("fyp", []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.data = {};
+        $scope.fetchTable = function () {
+            $http({
+                method: 'POST',
+                url: '/table/curriculum',
+                data: $scope.data,
+            }).then(function (res) {
+                $scope.curriculum = res.data.rows;
+            });
+        }
+        $scope.fetchTable();
+        $scope.fetchTable1 = function (cur) {
+            $http({
+                method: 'POST',
+                url: '/table1/' + cur,
+                data: $scope.data,
+            }).then(function (res) {
+                $scope.course = res.data.rows;
+            });
+        }
+        $scope.fetchsem = function (sem) {
+            $scope.sem = sem;
+        }
+
+    });
+</script>
 
 </html>

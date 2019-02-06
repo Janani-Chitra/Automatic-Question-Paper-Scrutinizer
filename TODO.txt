@@ -1,0 +1,10 @@
+curriculam
+sem 
+subs & labs credits min pass mark, max time, course own, co-instructor, internals externals, tot no periods
+Co_own ->end sem
+assses both
+written test or assignment(evaluation metrics)
+lesson plans 45 hrs
+import students
+
+create table 
