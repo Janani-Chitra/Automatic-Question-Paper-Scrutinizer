@@ -6,57 +6,96 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
+    <style>
+        .topNav {
+            background: #9257A5;
+            color: white;
+        }
+
+        body {
+            background: rgb(243, 230, 248);
+            font-family: 'Playfair Display', serif !important;
+        }
+
+        .mngDiv {
+            height: max-content;
+            background: white;
+            margin: 20px;
+            padding-top: 6px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 5px #9257A5;
+        }
+
+        .mnghead {
+            background: #D481EE;
+            color: white;
+            font-size: 20px;
+            border-top-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            padding-left: 30px;
+        }
+
+        .mngformDiv {
+            margin-top: 20px;
+
+        }
+
+        .formcon {
+            border: 1px solid #D481EE;
+            box-shadow: 3px 3px 5px #9257A5;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .btn {
+            background: #D481EE;
+            color: white;
+        }
+
+        .btn:hover {
+            border: 1px solid #9257A5;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-info bg-info">
+    <!-- <nav class="navbar navbar-info topNav">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Automatic Question Paper Scrutinizer</span>
+            <span class="navbar-brand mb-0 h1"></span>
         </div>
-    </nav>
-    <form action="/download" method="POST" class="container">
-        <div class="form-group">
-            <label>Curriculum</label>
-            <select class="form-control" name="curriculum">
-                <% rows.forEach(row=>{ %>
-                <option>
-                    <%- row.cur_id %>
-                </option>
-                <% }) %>
-            </select>
+    </nav> -->
+    <div class=" mngDiv">
+        <div class="container mnghead">Automatic Question Paper Scrutinizer</div>
+        <div class="container mngformDiv">
+            <div class="formcon">
+
+                <form action="/download" method="POST" class="container">
+                    <div class="form-group">
+                        <label>Curriculum</label>
+                        <select class="form-control" name="curriculum">
+                            <% rows.forEach(row=>{ %>
+                            <option>
+                                <%- row.cur_id %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Paper ID</label>
+                        <select class="form-control" name="paper_id">
+                            <% rows.forEach(row=>{ %>
+                            <option>
+                                <%- row.paper_id %>
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Download</button>
+                </form>
+            </div>
         </div>
-        <!-- <div class="form-group">
-            <label>Semester</label>
-            <select class="form-control">
-                <% rows.forEach(row=>{ %>
-                <option>
-                    <%- row.semester %>
-                </option>
-                <% }) %>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Course ID</label>
-            <select class="form-control">
-                <% rows.forEach(row=>{ %>
-                <option>
-                    <%- row.course_id %>
-                </option>
-                <% }) %>
-            </select>
-        </div> -->
-        <div class="form-group">
-            <label>Paper ID</label>
-            <select class="form-control" name="paper_id">
-                <% rows.forEach(row=>{ %>
-                <option>
-                    <%- row.paper_id %>
-                </option>
-                <% }) %>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-outline-info">Download</button>
-    </form>
+    </div>
 </body>
 
 </html>

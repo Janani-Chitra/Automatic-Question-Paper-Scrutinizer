@@ -19,7 +19,8 @@ module.exports.logout = (req, res) => {
     res.redirect("/")
 }
 module.exports.fetch = (req, res) => {
-    connection.query(`select * from course`, (err, rows) => {
+    var staff = req.session.user.staff_id;
+    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? `,[staff], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -27,7 +28,8 @@ module.exports.fetch = (req, res) => {
     })
 }
 module.exports.fetchcon = (req, res) => {
-    connection.query(`select * from course where cur_id =  ?`, [req.params.cur], (err, rows) => {
+    var staff = req.session.user.staff_id;
+    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? and c.cur_id = ?`, [staff,req.params.cur], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -75,9 +77,26 @@ module.exports.fetch2 = (req, res) => {
         res.send({ rows: rows })
     })
 }
+module.exports.fetchManage = (req, res) => {
+    connection.query(`select * from managetopics where Cid = ?`,[req.body.course], (err, rows) => {
+        if (err || !rows) {
+            rows = []
+        }
+        res.send({ rows: rows })
+    })
+}
+module.exports.viewChart = (req, res) => {
+    connection.query(`select * from course_to_question_mapping where course_id = ? and mode = ?`,[req.query.course_id,req.query.mode], (err, rows) => {
+        if (err || !rows) {
+            rows = []
+        }
+        console.log(rows)
+        res.render('viewChart', { data: rows })
+    })
+}
 module.exports.insert2 = (req, res) => {
     console.log(req.body)
-    var data = { course_id: req.body.course_id, questions: JSON.stringify(req.body.questions) };
+    var data = req.data;
     if (req.body.paper_id) {
         data['paper_id'] = req.body.paper_id;
     }
@@ -88,8 +107,18 @@ module.exports.insert2 = (req, res) => {
             return;
         }
         console.log({ paper_id: result.insertId })
-        res.json({ paper_id: result.insertId });
+        res.json({  message: "Question saved successfully"});
     });
+}
+module.exports.save = (req, res) => {
+    connection.query('insert into managetopics  set ? ', req.data, (err, result) => {
+        if (err) {
+            throw err;
+            return;
+        }
+        res.json({ message: "success" });
+    });
+
 }
 module.exports.fetch3 = (req, res) => {
     var query = 'select * from course as a,course_to_question_mapping as b,course_to_staff_mapping as c where a.course_id=b.course_id and c.staff_id=?';

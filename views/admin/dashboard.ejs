@@ -6,10 +6,20 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/angular.min.js"></script>
+    <style>
+        .navDiv {
+            background: #9257A5;
+            color: white;
+        }
+
+        .nav-item {
+            color: white; 
+        }
+    </style>
 </head>
 
 <body ng-app="fyp-admin" ng-controller="myCtrl">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark navDiv">
         <a class="navbar-brand" href="#">Admin</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
@@ -32,7 +42,8 @@
                         Add
                     </a>
                     <div class="dropdown-menu">
-                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(0)">
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form"
+                            ng-click="fetchForm(0)">
                             Staff
                         </button>
                         <!-- <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(3)">
@@ -41,10 +52,12 @@
                         <button class="dropdown-item btn" data-toggle="modal">
                             <a href="/admin/curriculum"> Curriculum</a>
                         </button>
-                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(1)">
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form"
+                            ng-click="fetchForm(1)">
                             Course
                         </button>
-                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form" ng-click="fetchForm(2)">
+                        <button class="dropdown-item btn" data-toggle="modal" data-target="#form"
+                            ng-click="fetchForm(2)">
                             Course to Staff Mapping
                         </button>
                     </div>

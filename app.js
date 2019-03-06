@@ -30,6 +30,11 @@ app.get('/classify', (req, res) => {
         res.send(body)
     })
 })
+app.get('/suggest', (req, res) => {
+    request('http://localhost:5000/suggest?q=' + req.query.q, function (error, response, body) {
+        res.send(body)
+    })
+})
 
 var port = 8080
 app.listen(port, (err) => {

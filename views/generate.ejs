@@ -13,15 +13,17 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         @media print {
-          #pdf-button {
-            display: none;
-          }
+            #pdf-button {
+                display: none;
+            }
         }
-        textarea,input{
+
+        textarea,
+        input {
             border: none;
-    border-color: transparent;
+            border-color: transparent;
         }
-      </style>
+    </style>
 
 </head>
 
@@ -84,10 +86,21 @@
                     <td>
                         <%= j %>
                     </td>
-                    <td><textarea cols="60" class="content" id='content-<%= id %>' onkeyup="start('<%= id %>')"></textarea></td>
-                    <td><textarea cols="10" id='class-<%= id %>' disabled></textarea></td>
-                    <td><textarea cols="7" id='cos-<%= id %>' disabled></textarea></td>
-                    <td><input type="text"></td>
+                    <td style="display:flex">
+                        <textarea cols="60" class="content" id='content-<%= id %>'
+                            onkeyup="start('<%= id %>')"></textarea>
+                        <button onclick="goClassify('<%= id %>')" >Classify</button>
+                    </td>
+                    <td><textarea cols="10" id='class-<%= id %>' class="BTlevel"  disabled></textarea></td>
+                    <td><textarea cols="7" id='cos-<%= id %>'class="course_outcome" disabled></textarea></td>
+                    <td><input type="text" class="marks"></td>
+                </tr>
+                <tr class="suggestion" id="suggestTR-<%= id %>" >
+                    <td style="display:none"> </td>
+                    <td style="display:none"><textarea  cols="60" id="suggest-<%= id %>"></textarea> </td>
+                    <td style="display:none"></td>
+                    <td style="display:none"></td>
+                    <td style="display:none"></td>
                 </tr>
                 <% } %>
             </table>
@@ -111,7 +124,7 @@
                 var bts = row.bt.split(',');
                 bts.forEach(bt => {
                     if (!reverse_map[bt]) reverse_map[bt] = [];
-                    reverse_map[bt].push('CO-' + row.co_id);
+                    reverse_map[bt].push(row.CO_level);
                 });
             });
             console.log(reverse_map)
@@ -130,7 +143,34 @@
             if (cos == 'undefined') { cos = '' };
             $(cos_id).val(cos);
         }
+        function gosug(id, val) {
+            $(`#suggestTR-${id}`).children().show()
+            var class_id = `#suggest-${id}`;
+            $(class_id).val(val);
+            var bts = val.split(','), i = 0, cos = '';
+            for (; i < bts.length - 1; i++) {
+                cos += reverse_map[bts[i]] + ',';
+            }
+            if (bts.length > 0) {
+                cos += reverse_map[bts[i]];
+            }
+            var cos_id = `#cos-${id}`;
+            if (cos == 'undefined') { cos = '' };
+            $(cos_id).val(cos);
+        }
         function start(id) {
+            var content_id = `#content-${id}`;
+            var content = $(content_id).val();
+            $.ajax({
+                url: '/suggest',
+                data: { q: content },
+                type: 'get',
+            }).done(function (res) {
+                gosug(id, res);
+            })
+        }
+        function goClassify(id) {
+            $('.suggestion').hide()
             var content_id = `#content-${id}`;
             var content = $(content_id).val();
             $.ajax({
@@ -141,17 +181,24 @@
                 go(id, res);
             })
         }
-        var data = { course_id: '<%- data.course_id %>' };
+        var data = { course_id: '<%- data.course_id %>', mode:'<%- data.mode %>' };
         function save() {
             data['questions'] = [];
+            data['course_outcome']=[];
+            data['BTlevel']=[];
+            data['marks']=[];
             for (var i = 0; i < $('.content').length; i++) {
                 data['questions'].push($($('.content')[i]).val());
+                data['course_outcome'].push($($('.course_outcome')[i]).val())
+                data['BTlevel'].push($($('.BTlevel')[i]).val())
+                data['marks'].push($($('.marks')[i]).val())
             }
             $.ajax({
                 url: '/store-questions',
                 type: 'post',
                 data: data,
             }).done(function (res) {
+                alert(res.message)
                 data['paper_id'] = res.paper_id;
             })
         }
