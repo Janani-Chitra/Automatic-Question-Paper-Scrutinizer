@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,900" rel="stylesheet">
+    <meta name="course_outcome" content="<%= data.course_outcome || '[]' %>">
+    <meta name="BTlevel" content="<%= data.BTlevel || '[]' %>">
 </head>
 <style>
     body {
@@ -44,14 +46,55 @@
         box-shadow: 3px 3px 5px #9257A5;
         margin-top: 20px;
     }
+
+    .nodata {
+        height: 200px;
+        width: 500px;
+        margin: 20 auto;
+        border: 1px solid #D481EE;
+        box-shadow: 3px 3px 5px #9257A5;
+        padding :20px;
+    }
+
+    .sym {
+        font-size: 75px;
+        padding-bottom: 10px;
+        color: #D481EE;
+        margin: 10 auto;
+    }
+
+    .nodataText {
+        font-size: 20px;
+    }
+    .innerNodata{
+        height: 160px;
+        width: 460px;
+        border: 10px solid #D481EE;
+    }
 </style>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <body ng-app="fyp" ng-controller="myCtrl">
     <div class=" mngDiv">
+        <% if(!Object.keys(data).length) { %>
         <div class="container mnghead">
-            <%= data[0].course_id %> - <%= data[0].mode %>
+            <%= course_id %> - <%= mode %>
         </div>
+        <div class="nodata" align="center">
+            <div class="innerNodata">
+                <i class="fas fa-search sym"></i>
+                <div class="nodataText">
+                    Sorry, No data found !
+                </div>
+            </div>
+        </div>
+
+        <% }  else { %>
+        <div class="container mnghead">
+            <%= data.course_id %> - <%= data.mode %>
+        </div>
+
+
         <div class="container">
             <table border="1" width="90%" style="text-align:center" class="table table-striped table-bordered tablecon">
                 <thead class="tableHead">
@@ -63,15 +106,15 @@
                         <th>Marks</th>
                     </tr>
                 </thead>
-                <% for (j = 1; j <= JSON.parse(data[0].questions).length; j++) { %>
+                <% for (j = 1; j <= JSON.parse(data.questions).length; j++) { %>
                 <tr>
                     <td>
                         <%= j %>
                     </td>
-                    <td><%= JSON.parse(data[0].questions)[j-1] %></td>
-                    <td><%= JSON.parse(data[0].BTlevel)[j-1] %></td>
-                    <td><%= JSON.parse(data[0].course_outcome)[j-1] %></td>
-                    <td><%= JSON.parse(data[0].marks)[j-1] %></td>
+                    <td><%= JSON.parse(data.questions)[j-1] %></td>
+                    <td><%= JSON.parse(data.BTlevel)[j-1] %></td>
+                    <td><%= JSON.parse(data.course_outcome)[j-1] %></td>
+                    <td><%= JSON.parse(data.marks)[j-1] %></td>
                 </tr>
                 <% } %>
             </table>
@@ -80,16 +123,15 @@
                 <div id="piechart_3d1" style="width: 600px; height: 400px;"></div>
             </div>
         </div>
+        <% } %>
     </div>
 </body>
 <script>
     var app = angular.module("fyp", []);
     app.controller('myCtrl', function ($scope, $http) {
-        $scope.data = { co: '<%- data[0].course_outcome %>', bt: '<%- data[0].BTlevel %>' };
-        // $scope.x = '<%- data[0].mode %>';
-        $scope.co = JSON.parse($scope.data.co)
-        $scope.bt = JSON.parse($scope.data.bt)
-        console.log($scope.co)
+        $scope.co = JSON.parse($('meta[name="course_outcome"]').attr('content'));
+        $scope.bt = JSON.parse($('meta[name="BTlevel"]').attr('content'));
+        console.log($scope.co, $scope.bt);
         $scope.coDic = {};
         for (var i = 0; i < 6; i++) {
             var x = "CO-" + i;
@@ -140,7 +182,6 @@
                 title: "Bloom's Taxonomy Distribution",
                 is3D: true,
             };
-
             var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
             chart.draw(COdata, options);
             var chart = new google.visualization.PieChart(document.getElementById('piechart_3d1'));

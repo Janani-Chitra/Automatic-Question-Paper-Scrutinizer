@@ -3,7 +3,7 @@ import json
 
 x = []
 y = []
-with open('dataset.csv') as csv_file:
+with open('dataset.csv', encoding="utf8") as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     for row in csv_reader:
         x.append(row[0])

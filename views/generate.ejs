@@ -97,7 +97,10 @@
                 </tr>
                 <tr class="suggestion" id="suggestTR-<%= id %>" >
                     <td style="display:none"> </td>
-                    <td style="display:none"><textarea  cols="60" id="suggest-<%= id %>"></textarea> </td>
+                    <td style="display:none">
+                        <textarea  cols="60" id="suggest-<%= id %>"></textarea> 
+                        <button onclick="useSuggestion('<%= id %>')" ><i class="fas fa-angle-up"></i></button>
+                    </td>
                     <td style="display:none"></td>
                     <td style="display:none"></td>
                     <td style="display:none"></td>
@@ -170,7 +173,7 @@
             })
         }
         function goClassify(id) {
-            $('.suggestion').hide()
+            $(`#suggestTR-${id}`).children().hide()
             var content_id = `#content-${id}`;
             var content = $(content_id).val();
             $.ajax({
@@ -180,6 +183,14 @@
             }).done(function (res) {
                 go(id, res);
             })
+        }
+        function useSuggestion(id) {
+            $(`#suggestTR-${id}`).children().hide()
+            var suggestion_id = `#suggest-${id}`;
+            var suggestion = $(suggestion_id).val();
+            console.log(suggestion)
+            var content_id = `#content-${id}`;
+            $(content_id).val(suggestion);
         }
         var data = { course_id: '<%- data.course_id %>', mode:'<%- data.mode %>' };
         function save() {

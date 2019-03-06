@@ -51,4 +51,4 @@ def similarity(sentences, sentence):
 
 
 # similarity(['i am arun'], 'my name is arun')
-similarity(['introduction to  algorithmics','Time complexity of algorithm','sorting algorithms'], 'what is the worse case of quick sort')
+# similarity(['introduction to  algorithmics','Time complexity of algorithm','sorting algorithms'], 'what is the worse case of quick sort')

@@ -1,25 +1,30 @@
 from gingerit.gingerit import GingerIt
-import pickle as pickle
 import csv
 import json
 from shutil import copyfile
 from datetime import datetime
 from similarity import similarity
 from flask import Flask, request
-app = Flask(__name__)
-parser = GingerIt()
-
-with open('classify.pkl', 'rb') as fp:
+from classifyUsingKeyword import *
+import pickle
+with open('classify_new.pkl', 'rb') as fp:
     content = pickle.load(fp)
     model, vect = content[0], content[1]
+
+app = Flask(__name__)
+parser = GingerIt()
 
 
 @app.route('/', methods=['GET'])
 def hello_world():
     text = request.args.get('q')
     if(not text):
-        return ''
-    return model.predict(vect.transform([text]))[0]
+        return 'other'
+    label = model.predict(vect.transform([text]))[0]
+    if label == 0:
+        return "invalid question type"
+    else:
+        return getClassifiedCategories(getCategoryCount(text))
 
 
 @app.route('/suggest', methods=['GET'])

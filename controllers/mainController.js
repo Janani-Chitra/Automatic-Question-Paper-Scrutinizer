@@ -20,7 +20,7 @@ module.exports.logout = (req, res) => {
 }
 module.exports.fetch = (req, res) => {
     var staff = req.session.user.staff_id;
-    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? `,[staff], (err, rows) => {
+    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? `, [staff], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -29,7 +29,7 @@ module.exports.fetch = (req, res) => {
 }
 module.exports.fetchcon = (req, res) => {
     var staff = req.session.user.staff_id;
-    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? and c.cur_id = ?`, [staff,req.params.cur], (err, rows) => {
+    connection.query(`select * from course c inner join course_to_staff_mapping cs on c.course_id  = cs.course_id where cs.staff_id = ? and c.cur_id = ?`, [staff, req.params.cur], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -78,7 +78,7 @@ module.exports.fetch2 = (req, res) => {
     })
 }
 module.exports.fetchManage = (req, res) => {
-    connection.query(`select * from managetopics where Cid = ?`,[req.body.course], (err, rows) => {
+    connection.query(`select * from managetopics where Cid = ?`, [req.body.course], (err, rows) => {
         if (err || !rows) {
             rows = []
         }
@@ -86,12 +86,15 @@ module.exports.fetchManage = (req, res) => {
     })
 }
 module.exports.viewChart = (req, res) => {
-    connection.query(`select * from course_to_question_mapping where course_id = ? and mode = ?`,[req.query.course_id,req.query.mode], (err, rows) => {
-        if (err || !rows) {
-            rows = []
+    connection.query(`select * from course_to_question_mapping where course_id = ? and mode = ?`, [req.query.course_id, req.query.mode], (err, rows) => {
+        var row = {};
+        if (err || !rows.length) {
+            row = {}
+        } else {
+            row = rows[0]
         }
-        console.log(rows)
-        res.render('viewChart', { data: rows })
+        console.log(row)
+        res.render('viewChart', { data: row, course_id: req.query.course_id, mode: req.query.mode })
     })
 }
 module.exports.insert2 = (req, res) => {
@@ -107,7 +110,7 @@ module.exports.insert2 = (req, res) => {
             return;
         }
         console.log({ paper_id: result.insertId })
-        res.json({  message: "Question saved successfully"});
+        res.json({ message: "Question saved successfully" });
     });
 }
 module.exports.save = (req, res) => {
