@@ -113,7 +113,7 @@
         $scope.classify = function (ind) {
             var val = $scope.data.outcomes[ind].co;
             console.log(val)
-            $http.get('/classify?q=' + val).then(function (res) {
+            $http.get('/co-bt?q=' + val).then(function (res) {
                 $scope.data.outcomes[ind].bt = res.data || '';
             })
         }

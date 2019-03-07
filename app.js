@@ -30,6 +30,11 @@ app.get('/classify', (req, res) => {
         res.send(body)
     })
 })
+app.get('/co-bt', (req, res) => {
+    request('http://localhost:5000/co-bt?q=' + req.query.q, function (error, response, body) {
+        res.send(body)
+    })
+})
 app.get('/suggest', (req, res) => {
     request('http://localhost:5000/suggest?q=' + req.query.q, function (error, response, body) {
         res.send(body)

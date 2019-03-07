@@ -97,6 +97,16 @@ module.exports.viewChart = (req, res) => {
         res.render('viewChart', { data: row, course_id: req.query.course_id, mode: req.query.mode })
     })
 }
+module.exports.editPlan = (req, res) => {
+    connection.query('update managetopics  set ?  where id = ?', [req.data, req.data.id], (err, result) => {
+        if (err) {
+            throw err;
+            return;
+        }
+        res.render('manageTopics')
+    });
+
+}
 module.exports.insert2 = (req, res) => {
     console.log(req.body)
     var data = req.data;

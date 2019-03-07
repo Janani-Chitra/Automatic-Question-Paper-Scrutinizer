@@ -1,8 +1,6 @@
 import json
 import pickle as pickle
 from datetime import datetime
-from sklearn.model_selection import train_test_split
-
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
@@ -18,7 +16,10 @@ print('')
 x, y = dataset[0], dataset[1]
 
 X_train, X_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.3)
+    x, y, test_size=0.1)
+
+print('Train size : %d' % len(y_train))
+print('Test size : %d' % len(y_test))
 
 print('Dataset Vectorize started at-', str(datetime.now()))
 vect = TfidfVectorizer()

@@ -22,6 +22,7 @@ app.get('/generate', middleware.isLoggedIn, (req, res) => {
     console.log(req.query);
     res.render('generate', { data: req.query })
 })
+app.get('/editPlan', middleware.isLoggedIn, middleware.editPlan, controller.editPlan)
 app.get('/viewChart', middleware.isLoggedIn,middleware.viewChart, controller.viewChart)
 app.post('/table/course', middleware.isLoggedIn, controller.fetch)
 app.post('/table1/:cur', middleware.isLoggedIn, controller.fetchcon)

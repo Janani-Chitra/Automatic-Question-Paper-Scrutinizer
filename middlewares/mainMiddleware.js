@@ -52,3 +52,19 @@ module.exports.viewChart = (req, res, next) => {
     }
     next()
 }
+module.exports.editPlan = (req, res, next) => {
+    if (!req.query.topicUnits || !req.query.topicTitle || !req.query.topicHour || !req.query.method ||!req.query.topicContent) {
+        res.send( "Fill all fields in the question paper template" );
+        return;
+    }
+    var data = {
+        topicUnits: req.query.topicUnits,
+        topicTitle: req.query.topicTitle,
+        topicHour: req.query.topicHour,
+        method: req.query.method,
+        topicContent: req.query.topicContent,
+        id: req.query.id
+    };
+    req.data = data;
+    next()
+}

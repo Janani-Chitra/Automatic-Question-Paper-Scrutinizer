@@ -4,13 +4,9 @@ import json
 from shutil import copyfile
 from datetime import datetime
 from similarity import similarity
-from flask import Flask, request
 from classifyUsingKeyword import *
-import pickle
-with open('classify_new.pkl', 'rb') as fp:
-    content = pickle.load(fp)
-    model, vect = content[0], content[1]
-
+from predict import predict
+from flask import Flask, request
 app = Flask(__name__)
 parser = GingerIt()
 
@@ -19,12 +15,26 @@ parser = GingerIt()
 def hello_world():
     text = request.args.get('q')
     if(not text):
-        return 'other'
-    label = model.predict(vect.transform([text]))[0]
+        return 'Empty string identified.'
+    label = predict(text)
     if label == 0:
         return "invalid question type"
-    else:
-        return getClassifiedCategories(getCategoryCount(text))
+    label =  getClassifiedCategories(getCategoryCount(text))
+    if len(label) :
+        return label[0]
+    else : 
+        return "Waiting for full text.."
+    
+@app.route('/co-bt', methods=['GET'])
+def hello_world1():
+    text = request.args.get('q')
+    if(not text):
+        return 'Empty string identified.'
+    label =  getClassifiedCategories(getCategoryCount(text))
+    if len(label) :
+        return label[0]
+    else : 
+        return "Waiting for full text.."
 
 
 @app.route('/suggest', methods=['GET'])

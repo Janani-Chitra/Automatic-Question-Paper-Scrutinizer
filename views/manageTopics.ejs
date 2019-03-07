@@ -90,6 +90,16 @@
             padding: 0;
             margin-bottom: 10px;
         }
+
+        .edit {
+            border: 2px solid #9257A5;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-family: 'Playfair Display', serif !important;
+            /* color:#9257A5; */
+        }
     </style>
 
 </head>
@@ -190,21 +200,77 @@
                         <th scope="col">Topic Content</th>
                         <th scope="col">Topic Hour</th>
                         <th scope="col">Topic Delivery Method</th>
+                        <th scope="col">Edit</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat="i in managetopics | orderBy : 'topicUnits'">
+                    <tr data-ng-repeat="i in managetopics | orderBy : 'topicUnits'" id="{{i.id}}">
                         <td><strong> {{ i.topicUnits | uppercase}} </strong></td>
                         <td>{{i.topicTitle}}</td>
                         <td>{{ i.topicContent}}</td>
                         <td>{{ i.topicHour}}</td>
                         <td>{{ i.method}}</td>
+                        <td> <i data-toggle="modal" data-target="#exampleModal" ng-click="editForm($index)"
+                                class="fas fa-edit"></i></td>
                     </tr>
                 </tbody>
             </table>
 
         </div>
 
+    </div>
+    <div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog  " role="document">
+            <div class="modal-content edit">
+                <div class="modal-header" style="background: #9257A5;color:white">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Lesson PLan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:white">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/editPlan" method="GET">
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text label"> Topic Code</label>
+                                </div>
+                                <input type="text" class="form-control" ng-model=row.topicUnits name="topicUnits">
+                            </div>
+                            <div class="input-group mb-3 ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text label"> Topic Title</span>
+                                </div>
+                                <input type="text" class="form-control" ng-model=row.topicTitle name=topicTitle>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text label">Duration in Hours</span>
+                                </div>
+                                <input type="text" class="form-control" ng-model=row.topicHour name="topicHour">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text label">Delivery Method</span>
+                                </div>
+                                <input type="text" class="form-control" ng-model=row.method name="method">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text label">Topic Content</span>
+                                </div>
+                                <textarea  class="form-control" ng-model=row.topicContent name="topicContent"></textarea>
+                            </div>
+                            <input type="hidden" class="form-control"  name="id" value="{{row.id}}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn_1" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn_1">Edit</button>
+                        </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 <script>
@@ -265,6 +331,10 @@
             }, function (res) {
                 alert('failed')
             });
+        }
+        $scope.editForm = function (id) {
+            $scope.row=$scope.managetopics[id]
+            console.log($scope.row)
         }
         $scope.show = function () {
             $('#addtopicform').show();

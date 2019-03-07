@@ -178,7 +178,7 @@
             var content = $(content_id).val();
             $.ajax({
                 url: '/classify',
-                data: { q: content },
+                data: { q: content, course_id: '<%= data.course_id %>' },
                 type: 'get',
             }).done(function (res) {
                 go(id, res);
