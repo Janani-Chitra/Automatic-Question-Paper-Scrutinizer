@@ -1,2 +1,7 @@
 node_modules/
 public/temp/
+BT Classifier/datasets/
+BT Classifiers/jsons/
+BT Classifier/saved_models/
+BT Classifier/output.txt
+*__pycache__

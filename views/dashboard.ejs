@@ -225,46 +225,46 @@
         </div>
     </div>
     <div class="modal fade " id="chartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog  " role="document">
-        <div class="modal-content Qgen">
-            <div class="modal-header" style="background: #9257A5;color:white">
-                <h5 class="modal-title" id="exampleModalLabel">Question Coverage Chart</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="/viewChart" method="GET">
-                <div class="modal-body">
-                    <div class="input-group mb-3">
+        aria-hidden="true">
+        <div class="modal-dialog  " role="document">
+            <div class="modal-content Qgen">
+                <div class="modal-header" style="background: #9257A5;color:white">
+                    <h5 class="modal-title" id="exampleModalLabel">Question Coverage Chart</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/viewChart" method="GET">
+                    <div class="modal-body">
                         <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text label"> Course ID</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text label"> Course ID</label>
+                                </div>
+                                <select class="form-control" ng-model="data.course_id" name="course_id" required>
+                                    <option value="" disabled>Select a course </option>
+                                    <option ng-repeat="course in courses">{{course.course_id}}</option>
+                                </select>
                             </div>
-                            <select class="form-control" ng-model="data.course_id" name="course_id" required>
-                                <option value="" disabled>Select a course </option>
-                                <option ng-repeat="course in courses">{{course.course_id}}</option>
-                            </select>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text label"> Test Mode</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text label"> Test Mode</label>
+                                </div>
+                                <select class="form-control" ng-model="data.mode" name="mode" required>
+                                    <option value="" disabled>Select a mode </option>
+                                    <option ng-repeat="mode in modes">{{mode}}</option>
+                                </select>
                             </div>
-                            <select class="form-control" ng-model="data.mode" name="mode" required>
-                                <option value="" disabled>Select a mode </option>
-                                <option ng-repeat="mode in modes">{{mode}}</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn_1" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn_1">Start</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn_1" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn_1">Start</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
     <script>
@@ -272,6 +272,7 @@
         app.controller('myCtrl', function ($scope, $http) {
             $scope.data = {};
             $scope.modes = ["Assessment-1", "Assessment-2", "Semester"];
+            $scope.data.sections = [{ name: '' }];
             $scope.inc = function (attr) {
                 // console.log("hi");
                 var list = $scope.data[attr];

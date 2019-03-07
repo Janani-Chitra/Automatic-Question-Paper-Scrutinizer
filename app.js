@@ -26,8 +26,20 @@ app.use('/admin', require('./routers/adminRouter'))
 
 var request = require('request')
 app.get('/classify', (req, res) => {
-    request('http://localhost:5000?q=' + req.query.q, function (error, response, body) {
-        res.send(body)
+    connection.query('select topicContent from managetopics where Cid=?', req.query.course_id, (err, results) => {
+        console.log(results);
+        if (!results) {
+            res.send('');
+            return;
+        }
+        var rows = [];
+        results.forEach(result => {
+            rows.push(result.topicContent);
+        });
+        console.log(rows)
+        request.post({ url: 'http://localhost:5000', form: { q: req.query.q, sens: JSON.stringify(rows) } }, (error, response, body) => {
+            res.send(body)
+        })
     })
 })
 app.get('/co-bt', (req, res) => {

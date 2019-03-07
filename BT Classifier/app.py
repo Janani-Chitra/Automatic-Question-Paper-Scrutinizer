@@ -3,37 +3,42 @@ import csv
 import json
 from shutil import copyfile
 from datetime import datetime
-from similarity import similarity
-from classifyUsingKeyword import *
-from predict import predict
+from src.similarity import similarity
+from src.classifyUsingKeyword import getCategoryCount, getClassifiedCategories
+from src.predict import predict
 from flask import Flask, request
 app = Flask(__name__)
 parser = GingerIt()
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['POST'])
 def hello_world():
-    text = request.args.get('q')
+    text = request.form['q']
     if(not text):
         return 'Empty string identified.'
     label = predict(text)
-    if label == 0:
+    if (label == 0):
         return "invalid question type"
-    label =  getClassifiedCategories(getCategoryCount(text))
-    if len(label) :
+    sens = json.loads(request.form['sens'])
+    print(sens[0])
+    code = similarity(sens, text)
+    print(code)
+    label = getClassifiedCategories(getCategoryCount(text))
+    if len(label):
         return label[0]
-    else : 
+    else:
         return "Waiting for full text.."
-    
+
+
 @app.route('/co-bt', methods=['GET'])
 def hello_world1():
     text = request.args.get('q')
     if(not text):
         return 'Empty string identified.'
-    label =  getClassifiedCategories(getCategoryCount(text))
-    if len(label) :
+    label = getClassifiedCategories(getCategoryCount(text))
+    if len(label):
         return label[0]
-    else : 
+    else:
         return "Waiting for full text.."
 
 
@@ -43,8 +48,11 @@ def Suggestion():
     if(not text):
         return ''
     if(parser.parse(text)['corrections']):
-        text = parser.parse(text)['result']
-        return text
+        text = parser.parse(text)
+        if 'result' in text:
+            return text['result']
+        else:
+            return ''
 
 
 @app.route('/gene', methods=['POST'])
@@ -67,12 +75,6 @@ def gene():
             writer = csv.writer(f2, lineterminator='\n')
             writer.writerows(all)
     return _to
-
-
-@app.route('/check', methods=['POST'])
-def check():
-    sentences, sentence = request.form['sentences'], request.form['sentence']
-    return {code: similarity(sentences, sentence)}
 
 
 if __name__ == '__main__':
